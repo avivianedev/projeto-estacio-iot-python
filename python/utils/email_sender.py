@@ -26,7 +26,7 @@ def email_sender(temperature):
         """
         mail.Send()  
         save_email_status(PATHFILE, current_time)          
-        print("Email de alerta enviado com sucesso!")
+        print(f"Email de alerta enviado com sucesso! Enviado em {current_time}")
     except Exception as e:
         print(f"Erro ao enviar o email: {e}")
 

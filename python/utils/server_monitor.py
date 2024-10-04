@@ -30,8 +30,8 @@ class ServerMonitor:
         else:
             return         
     
-    def evaluate_temperature(self,):        
-        temperature = self.fetch_temperature()
+    def evaluate_temperature(self,temperature=30.00):        
+        #temperature = self.fetch_temperature()
         if not math.isnan(temperature):
             if temperature > 26:
                 image = "temperatura-alta.png"
