@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento Temperatura</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='reset.css')}}">
+</head>
+
+<body>
+    <section class='header-index'>
+        <h1>Monitor Temperatura</h1>
+        <script type="text/javascript">
+            // Função que atualiza a página a cada x minutos 
+            setTimeout(function () {
+                window.location.reload(1);
+                console.log("Página atualizada")
+            }, 60000); // 1 minutos
+        </script>
+    </section>
+
+    <section class='container-temperature'>
+        <div class="content-temp">
+            <div class="box-temp">
+                <i class="fas fa-thermometer-half icon"></i>
+                <p> {{temperature}}°C</p>
+            </div>
+            <div class='temp-icons'>
+                <img src="{{url_for('static',filename='assets/' + image)}}" alt="Emoticon com muito calor" />
+                <p><strong>{{condition}}</strong> {{message}}</p>
+            </div>
+        </div>
+
+    </section>
+    <section class='table-control-container'>
+        <h1>Ultimos acionamentos realizados</h1>
+
+        <ul class='list-container'>
+            <h3>Data e hora</h3>
+            {% for linha in data %}
+            <li>{{ linha }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</body>
+
+</html>

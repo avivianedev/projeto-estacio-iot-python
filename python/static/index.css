@@ -1,0 +1,68 @@
+.header-index {
+    padding: 1em;
+    background-color: black;
+    color: white;
+}
+
+.container-temperature {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container-temperature .content-temp {
+    margin-top: 2em;
+    padding: 1em;
+    width: 500px;
+    height: 200px;
+    border: 2px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-temperature .content-temp .box-temp {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+}
+
+.container-temperature .content-temp .box-temp i {
+    font-size: 30px;
+}
+
+.container-temperature .content-temp .box-temp p {
+    font-size: 30px;
+
+}
+
+.container-temperature .content-temp .temp-icons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+}
+
+.container-temperature .content-temp .temp-icons img {
+    width: 80px;
+    height: 80px;
+}
+
+.container-temperature .content-temp .temp-icons p {
+    font-size: 20px;
+}
+
+.table-control-container {
+    padding: 2em;
+    width: 100%;
+    text-align: center;
+}
+
+.table-control-container .list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
