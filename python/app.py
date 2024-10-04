@@ -12,20 +12,19 @@ def index():
     image = "erro.png" 
     condition = "Indisponível"
     message = "Erro ao obter a temperatura. Verifique sua conexão com a internet e se o sensor está ligado."
-    temperature= 45.00
+    temperature= "Erro"
     
 
     with open('email_status.txt', 'r') as file:
         data = file.read().splitlines()
-    #if c.connection_server() is not None:    
-    #    temperature = c.fetch_temperature()   
-    #    image, condition, message = c.evaluate_temperature()      
-    #    return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=data)  
-    
-    image, condition, message = c.evaluate_temperature(temperature)      
+    if c.connection_server() is not None:    
+        temperature = c.fetch_temperature()   
+        image, condition, message = c.evaluate_temperature()      
+        return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=data)     
+          
 
     return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=data)  
 
 
 if __name__ == '__main__':    
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
