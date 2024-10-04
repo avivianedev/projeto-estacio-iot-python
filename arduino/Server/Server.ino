@@ -14,15 +14,14 @@ ESP8266WebServer server(80);
 const int led = 1;
 
 void handleRoot() {  
-  float temperatura = dht.getTemperature();
+  float temperatura = dht.getTemperature();  
   
   digitalWrite(led, 1);
   Serial.print("Temperatura: ");
   Serial.print(temperatura);
 
   String textoHTML;
-  textoHTML += "Temperatura: " + String(temperatura);
- 
+  textoHTML += "Temperatura: " + String(temperatura); 
    
   server.send(200, "text/html", textoHTML);
   digitalWrite(led, 0);
@@ -96,5 +95,5 @@ void loop(void){
   
   Serial.println("Temperatura: ");
   Serial.println(temperatura);
-  delay(2000);
+  delay(5000);
 }
