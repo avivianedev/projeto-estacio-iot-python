@@ -1,8 +1,8 @@
-# Frontend - IoT Monitor de Temperatura
-Este documento descreve o frontend da aplicação de monitoramento de temperatura baseada em IoT, utilizando Flask para a interface web que exibe a temperatura monitorada pelo sensor DHT11 conectado à placa ESP8266 NodeMCU V3.
+# Frontend - IoT Cloud Monitor de Temperatura - Python
+Este documento descreve o frontend da aplicação de monitoramento de temperatura baseada em IoT, utilizando Flask para a interface web que exibe a temperatura monitorada pelo sensor DHT11 conectado à placa ESP8266 NodeMCU V3. O Flask faz uma requisição à API do ThingSpeak e exibe as informações da temperatura.
 
 ## Funcionalidades
-- Exibição de temperatura em tempo real: O frontend realiza requisições periódicas ao backend para exibir a temperatura atual.
+- Exibição de temperatura em tempo real: O frontend realiza requisições periódicas para exibir a temperatura atual.
 - Renderização condicional de status: Dependendo do valor da temperatura, a interface exibe diferentes imagens e mensagens:
     - Temperatura adequada: Entre 23°C e 26°C, com uma imagem de "ambiente confortável".
     - Temperatura quente: Acima de 26°C, recomendando resfriar o ambiente.
