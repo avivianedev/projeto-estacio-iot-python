@@ -3,9 +3,12 @@ from flask import Flask, render_template
 import os
 from utils.server_monitor import ServerMonitor
 from utils.email_sender import check_and_delete_lines
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
-SERVER_IP = os.getenv('SERVER_IP')
+
+SERVER_IP = os.getenv('API_URL')
 FILEPATH = 'email_status.txt'
 c = ServerMonitor(SERVER_IP)
 
