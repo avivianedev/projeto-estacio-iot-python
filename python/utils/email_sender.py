@@ -1,34 +1,55 @@
-import win32com.client as win32
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import os
-import pythoncom
+from dotenv import load_dotenv
 import datetime
 import time
 
+load_dotenv()
 
 EMAIL_RECEIVER = os.getenv('EMAIL_RECEIVER')
+EMAIL_SENDER = os.getenv('EMAIL_SENDER')
+SMTP_SERVER = os.getenv('SMTP_SERVER')
+SMTP_PORT = os.getenv('SMTP_PORT')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
 email_interval = 20 * 60  # 20 minutos em segundos
 current_time = time.time()
 PATHFILE = "email_status.txt"
 
-def email_sender(temperature):        
+def email_sender(temperature):  
+    #Construção do e-mail
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = EMAIL_RECEIVER 
+    msg['Subject'] = 'Alerta de Temperatura Quente' 
+    body = f"""
+    <p>A temperatura atual está muito alta: {temperature}°C.</p
+    <p>Recomenda-se resfriar o ambiente imediatamente.</p>
+    <p>Localização: Sala: xxx, Andar x</p
+    <p>Atenção! Um novo e-mail será enviado em <strong>20 minutos</strong> caso a situação não seja normalizada.</p
+    
+    <p>Abs, A Gerencia</p>
+    """
+    msg.attach(MIMEText(body, 'html'))   
+      
     try:
-        pythoncom.CoInitialize()
-        outlook = win32.Dispatch('Outlook.application')        
-        mail = outlook.CreateItem(0)       
-        mail.Subject = "Alerta de Temperatura Quente"
-        mail.To = EMAIL_RECEIVER      
-        mail.HTMLBody = f"""
-        <p>A temperatura atual está muito alta: {temperature}°C.</p
-        <p>Recomenda-se resfriar o ambiente imediatamente.</p>
-        <p>Localização: Sala: xxx, Andar x</p
-        <span>Atenção! Um novo e-mail será enviado em <strong>20 minutos</strong> caso a situação não seja normalizada.</span
-        <p>Abs, A Gerencia</p>
-        """
-        mail.Send()  
-        save_email_status(PATHFILE, current_time)          
+        #Conectando ao servidor SMTP
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()
+        server.login(EMAIL_SENDER,EMAIL_PASSWORD)
+
+        #Enviando o e-mail
+        server.sendmail(EMAIL_SENDER, msg['To'], msg.as_string())   
+        # Salvando o horario atual no arquivo     
+        save_email_status(PATHFILE, current_time) 
+                 
         print(f"Email de alerta enviado com sucesso! Enviado em {current_time}")
     except Exception as e:
         print(f"Erro ao enviar o email: {e}")
+    finally:
+        server.quit() #Encerrando a conexão. 
 
 def load_email_status(PATHFILE):
     try:
@@ -36,6 +57,19 @@ def load_email_status(PATHFILE):
             return f.read()
     except FileNotFoundError:
             return {"last_email_time": 0}
+    
+def check_and_delete_lines(PATHFILE):    
+    try:
+        with open(PATHFILE , 'r') as file:
+            lines = file.readlines()
+            if len(lines) > 20:
+                with open(PATHFILE, 'w') as file:
+                    file.truncate(0)  # Limpa o conteúdo do arquivo
+                    print(f"O arquivo tinha mais de 20 linhas e foi esvaziado.")
+            else:
+                print(f"O arquivo tem {len(lines)} linhas, nada foi alterado.")
+    except Exception as e:
+        print(f'Erro ao ler o arquivo', e)
 
 
 def save_email_status(PATHFILE, status):

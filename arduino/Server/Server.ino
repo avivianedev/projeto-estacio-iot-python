@@ -73,7 +73,7 @@ void setup(void){
   Serial.println(WiFi.localIP());
   
 
-  if (MDNS.begin("esp8266")) {
+  if (MDNS.begin("temperatura")) {
     Serial.println("MDNS responder started");
   }
 
@@ -91,6 +91,7 @@ void setup(void){
 
 void loop(void){
   server.handleClient();
+  MDNS.update();
   float temperatura = dht.getTemperature();
   
   Serial.println("Temperatura: ");
