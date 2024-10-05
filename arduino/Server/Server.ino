@@ -3,11 +3,13 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include "DHTesp.h"
+#include <ThingSpeak.h>
+
+#include "credentials.h"
 
 DHTesp dht;
 
-const char* ssid = "Vivelle_2G";
-const char* password ="Lion1010";
+WiFiClient  client;
 
 ESP8266WebServer server(80);
 
@@ -25,6 +27,7 @@ void handleRoot() {
    
   server.send(200, "text/html", textoHTML);
   digitalWrite(led, 0);
+  
 }
 
 void handleNotFound(){
@@ -65,13 +68,14 @@ void setup(void){
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Falha na conexão Wi-Fi.");
     return; // Saia da função de setup
-}
+  }
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-  
+
+  ThingSpeak.begin(client);  
 
   if (MDNS.begin("temperatura")) {
     Serial.println("MDNS responder started");
@@ -87,13 +91,24 @@ void setup(void){
 
   server.begin();
   Serial.println("HTTP server started");
+
+
 }
 
 void loop(void){
   server.handleClient();
   MDNS.update();
   float temperatura = dht.getTemperature();
-  
+  ThingSpeak.setField(1, temperatura);
+
+  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+
+  if (x == 200) {
+    Serial.println("Atualização de dados com sucesso.");
+  } else {
+    Serial.println("Erro ao enviar dados. Código HTTP: " + String(x));
+  }
+    
   Serial.println("Temperatura: ");
   Serial.println(temperatura);
   delay(5000);
