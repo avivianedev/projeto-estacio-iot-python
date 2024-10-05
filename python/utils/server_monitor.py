@@ -2,7 +2,6 @@ import requests
 import math
 from utils.email_sender import email_sender, check_last_email
 from datetime import datetime
-import time
 
 FILEPATH = "email_status.txt"
 
@@ -12,10 +11,12 @@ class ServerMonitor:
            
 
     def connection_server(self,):           
-        try:
+        try:    
             response = requests.get(self.server_ip)
             if response.status_code == 200:
-                return response.text.strip()
+                data = response.json()
+                temperatura = str(data['feeds'][-1]['field1'])
+                return temperatura
             else:
                 raise ConnectionError("Erro ao conectar ao servidor", response.status_code)
         except Exception as e:
@@ -25,8 +26,8 @@ class ServerMonitor:
     def fetch_temperature(self):        
         data = self.connection_server()
         if data:
-            temperature = data.split(':')[1].strip()
-            return float(temperature)
+            #temperature = data.split(':')[1].strip()
+            return float(data)
         else:
             return         
     
