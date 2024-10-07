@@ -7,11 +7,13 @@
     <title>Monitoramento Temperatura</title>
     <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='reset.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
 </head>
 
 <body>
     <section class='header-index'>
-        <h1>Monitor Temperatura</h1>
         <script type="text/javascript">
             // Função que atualiza a página a cada x minutos 
             setTimeout(function () {
@@ -22,28 +24,39 @@
     </section>
 
     <section class='container-temperature'>
-        <div class="content-temp">
-            <div class="box-temp">
-                <i class="fas fa-thermometer-half icon"></i>
+
+        <div class='control-container'>
+            <h1><i class="fas fa-thermometer-half icon"></i><strong>Temperatura</strong> App</h1>
+            <div class='alerts-info'>
+                <h3>Ultimos acionamentos realizados</h3>
+                <ul class='list-container'>
+                    <h5>Data e hora</h5>
+                    {% for linha in data %}
+                    <li>{{ linha }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+        <div class="content-temperature">
+            <img src="{{url_for('static',filename='assets/' + image)}}" alt="Emoticon com muito calor" />
+            <div class='temperature-value'>
+
                 <p> {{temperature}}°C</p>
             </div>
-            <div class='temp-icons'>
-                <img src="{{url_for('static',filename='assets/' + image)}}" alt="Emoticon com muito calor" />
+            <div class='temperature-condiction'>
                 <p><strong>{{condition}}</strong> {{message}}</p>
             </div>
         </div>
-
     </section>
-    <section class='table-control-container'>
-        <h1>Ultimos acionamentos realizados</h1>
 
-        <ul class='list-container'>
-            <h3>Data e hora</h3>
-            {% for linha in data %}
-            <li>{{ linha }}</li>
-            {% endfor %}
-        </ul>
-    </section>
 </body>
+<footer class='footer-container'>
+    <p>Desenvolvido por <span>Viviane Araujo</span></p>
+    <div class='footer-i'>
+        <a href="https://github.com/avivianedev"><i class="fa-brands fa-github"></i></a>
+    </div>
+
+</footer>
 
 </html>
