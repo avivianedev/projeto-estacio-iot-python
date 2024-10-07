@@ -15,3 +15,5 @@ EXPOSE 5000
 
 # Comando para rodar o app
 CMD ["python", "app.py"]
+
+ENV TZ=America/Sao_Paulo
