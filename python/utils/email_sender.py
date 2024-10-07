@@ -15,10 +15,10 @@ SMTP_PORT = os.getenv('SMTP_PORT')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 email_interval = 20 * 60  # 20 minutos em segundos
-current_time = time.time()
 status_mail = [] 
 
-def email_sender(temperature):     
+def email_sender(temperature): 
+    current_time = time.time()    
     #Construção do e-mail
     msg = MIMEMultipart()
     msg['From'] = EMAIL_SENDER

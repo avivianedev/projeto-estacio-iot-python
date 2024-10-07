@@ -8,7 +8,6 @@ from utils.email_sender import status_mail
 
 load_dotenv()
 app = Flask(__name__)
-data = status_mail
 
 SERVER_IP = os.getenv('API_URL')
 FILEPATH = 'email_status.txt'
@@ -25,9 +24,9 @@ def index():
         temperature = c.fetch_temperature()   
         image, condition, message = c.evaluate_temperature()   
         check_and_delete_lines()   
-        return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=data)     
+        return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=status_mail)     
           
-    return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=data)  
+    return render_template("index.html", temperature=temperature, image=image,condition=condition, message=message, data=status_mail)  
 
 
 if __name__ == '__main__':    
