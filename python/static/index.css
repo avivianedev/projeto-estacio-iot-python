@@ -136,7 +136,12 @@
         gap: 2em;
     }
 
+    .container-temperature .content-temperature .temperature-condiction {
+        width: 100%;
+    }
+
     .footer-container {
+        height: 100%;
         position: relative;
         overflow-y: hidden;
     }
