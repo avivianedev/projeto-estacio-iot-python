@@ -137,12 +137,13 @@
 
     .footer-container {
         position: relative;
+        overflow-y: hidden;
     }
 
     .control-container h1 {
-        padding: 1em;
-        font-size: 30px;
+        align-self: center;
+        font-size: 25px;
         position: absolute;
-        top: 0;
+        top: 2%;
     }
 }
