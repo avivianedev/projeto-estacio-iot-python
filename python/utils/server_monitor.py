@@ -2,20 +2,18 @@ import requests
 import math
 from utils.email_sender import email_sender, check_last_email
 from datetime import datetime
-
-FILEPATH = "email_status.txt"
-
 class ServerMonitor:
     def __init__(self, server_ip):
         self.server_ip = server_ip
            
 
-    def connection_server(self,):           
+    def connection_server(self,):    
+            
         try:    
             response = requests.get(self.server_ip)
             if response.status_code == 200:
                 data = response.json()
-                temperatura = str(data['feeds'][-1]['field1'])
+                temperatura = str(data['feeds'][-1]['field1'])                
                 return temperatura
             else:
                 raise ConnectionError("Erro ao conectar ao servidor", response.status_code)
@@ -25,8 +23,7 @@ class ServerMonitor:
         
     def fetch_temperature(self):        
         data = self.connection_server()
-        if data:
-            #temperature = data.split(':')[1].strip()
+        if data:            
             return float(data)
         else:
             return         
@@ -38,7 +35,7 @@ class ServerMonitor:
                 image = "temperatura-alta.png"
                 condition = "Temperatura quente"
                 message = "Recomenda-se resfriar o ambiente." 
-                if check_last_email(FILEPATH):               
+                if check_last_email():               
                     email_sender(temperature)
                 
             elif temperature < 23:

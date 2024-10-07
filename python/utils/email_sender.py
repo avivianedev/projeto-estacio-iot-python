@@ -16,9 +16,9 @@ EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 email_interval = 20 * 60  # 20 minutos em segundos
 current_time = time.time()
-PATHFILE = "email_status.txt"
+status_mail = [] 
 
-def email_sender(temperature):  
+def email_sender(temperature):     
     #Construção do e-mail
     msg = MIMEMultipart()
     msg['From'] = EMAIL_SENDER
@@ -42,69 +42,52 @@ def email_sender(temperature):
 
         #Enviando o e-mail
         server.sendmail(EMAIL_SENDER, msg['To'], msg.as_string())   
-        # Salvando o horario atual no arquivo     
-        save_email_status(PATHFILE, current_time) 
-                 
+        # Salvando o horario atual na lista     
+        save_email_status(current_time)                 
         print(f"Email de alerta enviado com sucesso! Enviado em {current_time}")
     except Exception as e:
         print(f"Erro ao enviar o email: {e}")
     finally:
         server.quit() #Encerrando a conexão. 
 
-def load_email_status(PATHFILE):
-    try:
-        with open(PATHFILE, 'r') as f:
-            return f.read()
-    except FileNotFoundError:
-            return {"last_email_time": 0}
-    
-def check_and_delete_lines(PATHFILE):    
-    try:
-        with open(PATHFILE , 'r') as file:
-            lines = file.readlines()
-            if len(lines) > 20:
-                with open(PATHFILE, 'w') as file:
-                    file.truncate(0)  # Limpa o conteúdo do arquivo
-                    print(f"O arquivo tinha mais de 20 linhas e foi esvaziado.")
-            else:
-                print(f"O arquivo tem {len(lines)} linhas, nada foi alterado.")
+  
+def check_and_delete_lines():    
+    try:        
+        if len(status_mail) > 20:
+            status_mail = [status_mail[-1]]
+            print(f"O arquivo tinha mais de 20 linhas e foi esvaziado.")
+        else:
+            print(f"O arquivo tem {len(status_mail)} linhas, nada foi alterado.")
     except Exception as e:
         print(f'Erro ao ler o arquivo', e)
 
 
-def save_email_status(PATHFILE, status):
+def save_email_status(status):
     formatted_time = datetime.datetime.fromtimestamp(status).strftime('%d/%m/%Y %H:%M:%S')
     try:
-        with open(PATHFILE, "a") as f:            
-            f.write(f'{formatted_time}\n') 
+       status_mail.append(formatted_time)     
     except Exception as e:
         return{"Erro ao salvar a informação", e}
     
-def check_last_email(PATHFILE):
-    try:
-        with open(PATHFILE, "r") as f:
-            lines = f.readlines()   
-
-            if not lines:
-                print("Nenhum envio anterior encontrado.")
-                return True
-            
-            last_time_str = lines[-1].strip() 
-            last_time_str = last_time_str.replace('"', '')
-            last_time = datetime.datetime.strptime(last_time_str, '%d/%m/%Y %H:%M:%S')
-
-            # Pega o horário atual
-            current_time = datetime.datetime.now()
-
-            # Calcula a diferença em minutos
-            time_difference = (current_time - last_time).total_seconds() / 60
-
-            if time_difference > 20:
-                print("Já passaram mais de 20 minutos desde o último envio.")
-                return True
-            else:
-                print( f"Ainda não se passaram 20 minutos. Tempo decorrido: {time_difference:.2f} minutos.")
-                return False
+def check_last_email():
+    try:     
+        if len(status_mail) == 0:
+            print("Nenhum envio anterior encontrado.")
+            return True        
+        last_status = status_mail[-1]
+        last_time_str = last_status.strip() 
+        last_time_str = last_time_str.replace('"', '')
+        last_time = datetime.datetime.strptime(last_time_str, '%d/%m/%Y %H:%M:%S')
+        # Pega o horário atual
+        current_time = datetime.datetime.now()
+        # Calcula a diferença em minutos
+        time_difference = (current_time - last_time).total_seconds() / 60
+        if time_difference > 20:
+            print("Já passaram mais de 20 minutos desde o último envio.")
+            return True
+        else:
+            print( f"Ainda não se passaram 20 minutos. Tempo decorrido: {time_difference:.2f} minutos.")
+            return False
 
     except Exception as e:   
         print(f"Erro ao verificar o horário {e}")     
