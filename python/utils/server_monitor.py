@@ -1,26 +1,34 @@
 import requests
 import math
 from utils.email_sender import email_sender, check_last_email
-from datetime import datetime
-class ServerMonitor:
-    def __init__(self, server_ip):
-        self.server_ip = server_ip
-           
 
-    def connection_server(self,):    
-            
-        try:    
-            response = requests.get(self.server_ip)
-            if response.status_code == 200:
-                data = response.json()
-                temperatura = str(data['feeds'][-1]['field1'])                
-                return temperatura
+
+class ServerMonitor:
+    def __init__(self, server_ip, server_eps32):
+        self.server_ip = server_ip          
+        self.server_esp32 = server_eps32
+
+    def connection_server(self,):   
+        try:
+            conection_esp = requests.get(self.server_esp32)  
+            if conection_esp.status_code == 200:         
+                try:    
+                    response = requests.get(self.server_ip)
+                    data = response.json()           
+                    temperatura = str(data['feeds'][-1]['field1'])                
+                    return temperatura
+
+                except Exception as e:
+                    print(f"Erro ao conectar ao servidor: {e}")
+                    return 
             else:
-                raise ConnectionError("Erro ao conectar ao servidor", response.status_code)
+                print(f'A Esp32 está desligada')   
+                return  
         except Exception as e:
             print(f"Erro ao conectar ao servidor: {e}")
-            return      
-        
+            return 
+
+
     def fetch_temperature(self):        
         data = self.connection_server()
         if data:            

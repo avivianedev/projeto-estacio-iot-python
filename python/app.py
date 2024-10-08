@@ -9,17 +9,18 @@ from utils.email_sender import status_mail
 load_dotenv()
 app = Flask(__name__)
 
-SERVER_IP = os.getenv('API_URL')
+API_URL = os.getenv('API_URL')
+SERVER_EPS32 = os.getenv('SERVER_EPS32')
 FILEPATH = 'email_status.txt'
-c = ServerMonitor(SERVER_IP)
+c = ServerMonitor(API_URL, SERVER_EPS32)
 
 @app.route("/")
 def index():    
     image = "erro.png" 
     condition = "Indisponível"
     message = "Erro ao obter a temperatura. Verifique sua conexão com a internet e se o sensor está ligado."
-    temperature= 00.00    
-    
+    temperature= 00.00     
+   
     if c.connection_server() is not None:    
         temperature = c.fetch_temperature()   
         image, condition, message = c.evaluate_temperature()   
@@ -30,4 +31,4 @@ def index():
 
 
 if __name__ == '__main__':    
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0')
