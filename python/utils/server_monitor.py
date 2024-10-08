@@ -10,7 +10,7 @@ class ServerMonitor:
 
     def connection_server(self,):   
         try:
-            conection_esp = requests.get(self.server_esp32)  
+            conection_esp = requests.get(self.server_esp32, timeout=5)  
             if conection_esp.status_code == 200:         
                 try:    
                     response = requests.get(self.server_ip)
