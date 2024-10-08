@@ -11,7 +11,7 @@ class ServerMonitor:
         
     def connection_server(self,):   
         try:                 
-            response = requests.get(self.server_ip)
+            response = requests.get(self.server_ip, timeout=5)
             data = response.json()           
             temperatura = str(data['feeds'][-1]['field1'])                
             return temperatura             
