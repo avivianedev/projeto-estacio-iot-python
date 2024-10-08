@@ -27,15 +27,19 @@
 
         <div class='control-container'>
             <h1><i class="fas fa-thermometer-half icon"></i><strong>Temperatura</strong> App</h1>
+            {% if data %}
             <div class='alerts-info'>
                 <h3>Ultimos acionamentos realizados</h3>
                 <ul class='list-container'>
+
                     <h5>Data e hora</h5>
                     {% for linha in data %}
                     <li>{{ linha }}</li>
                     {% endfor %}
+
                 </ul>
             </div>
+            {% endif %}
 
         </div>
         <div class="content-temperature">
