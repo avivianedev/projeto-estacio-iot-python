@@ -7,6 +7,13 @@
 
 #include "credentials.h"
 
+IPAddress local_IP(192, 168, 0, 50);    
+IPAddress gateway(192, 168, 0, 1);      
+IPAddress subnet(255, 255, 255, 0);  
+
+IPAddress primaryDNS(8, 8, 8, 8);        
+IPAddress secondaryDNS(8, 8, 4, 4);  
+
 DHTesp dht;
 
 WiFiClient  client;
@@ -56,8 +63,14 @@ void setup(void){
 
 
   WiFi.mode(WIFI_STA);
+
+  if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+  Serial.println("Falha ao configurar IP estático");
+  }
   WiFi.begin(ssid, password);
   Serial.println("");
+  Serial.println(ssid);
+  
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -66,14 +79,15 @@ void setup(void){
     
   }
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Falha na conexão Wi-Fi.");
+    Serial.println("Falha na conexão Wi-Fi.");    
     return; // Saia da função de setup
   }
   Serial.println("");
   Serial.print("Connected to ");
-  Serial.println(ssid);
+  Serial.println(ssid);  
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
 
   ThingSpeak.begin(client);  
 
@@ -99,17 +113,20 @@ void loop(void){
   server.handleClient();
   MDNS.update();
   float temperatura = dht.getTemperature();
-  ThingSpeak.setField(1, temperatura);
+
+  ThingSpeak.setField(1, temperatura);  
 
   int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+  Serial.print("Codigo de retorno ThingSpeak (x): ");
+  Serial.println(x);
 
   if (x == 200) {
     Serial.println("Atualização de dados com sucesso.");
   } else {
-    Serial.println("Erro ao enviar dados. Código HTTP: " + String(x));
+    Serial.println("Falha no envio para o ThingSpeak.");
   }
     
   Serial.println("Temperatura: ");
   Serial.println(temperatura);
-  delay(5000);
+  delay(20000);
 }
