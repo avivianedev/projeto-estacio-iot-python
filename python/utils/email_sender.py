@@ -7,6 +7,7 @@ import datetime
 import time
 
 load_dotenv()
+current_time = time.time() 
 
 EMAIL_RECEIVER = os.getenv('EMAIL_RECEIVER')
 EMAIL_SENDER = os.getenv('EMAIL_SENDER')
@@ -14,7 +15,6 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = os.getenv('SMTP_PORT')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
-email_interval = 20 * 60  # 20 minutos em segundos
 status_mail = [] 
 
 def email_sender(temperature): 
@@ -51,11 +51,13 @@ def email_sender(temperature):
         server.quit() #Encerrando a conexão. 
 
   
-def check_and_delete_lines():    
+def check_and_delete_lines():  
+    global status_mail   
     try:        
         if len(status_mail) > 20:
             status_mail = [status_mail[-1]]
             print(f"O arquivo tinha mais de 20 linhas e foi esvaziado.")
+            return
         else:
             print(f"O arquivo tem {len(status_mail)} linhas, nada foi alterado.")
     except Exception as e:
@@ -65,7 +67,8 @@ def check_and_delete_lines():
 def save_email_status(status):
     formatted_time = datetime.datetime.fromtimestamp(status).strftime('%d/%m/%Y %H:%M:%S')
     try:
-       status_mail.append(formatted_time)     
+       status_mail.append(formatted_time)  
+       check_and_delete_lines()   
     except Exception as e:
         return{"Erro ao salvar a informação", e}
     
