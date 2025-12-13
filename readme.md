@@ -4,6 +4,12 @@
 - O sistema inclui um disparo de e-mail autompatico para o time de manutenção para notificar sobre a necessidade de acerto na temperatura.
 - A página na web conta com uma renderização condicional conforme o valor da temperatura obtido no sensor e o histórico com a datas onde foi necessário realizar ajuste na temperatura.
 
+## 📸 Telas do Projeto
+
+| Home - Desktop | Home - Mobile |
+|:--------------------:|:--------------------:|
+| <img src="./python/static/assets/screenshots/Home.png" width="400"> | <img src="./python/static/assets/screenshots/Home_mobile.jpeg" width="400"> |
+
 ## Componentes
 - ESP8266 NodeMCU V3
 - Sensor de Temperatura DHT11
